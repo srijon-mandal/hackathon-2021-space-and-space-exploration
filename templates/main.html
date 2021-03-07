@@ -12,8 +12,18 @@
     <link rel="icon" href="/static/favicon.png" type="image/png"/>
 </head>
 <body style="background-color: cadetblue;">
-    <h3 id="header" style="text-align: center; color:navy">Welcome to Space Invaders</h3>
-    <p id="index" style="text-align: center; color:navy">Index of Points: When an asteroid crosses the border 15 points are lost. When an alien crosses the border 5 points are lost. When an alien bullet hits you 1 point is lost. When you shoot a meteor 2 points are gained. When you kill an alien 5 points are gained. Remeber that to kill an alien you need to shoot it twice.</p>
+    <h3 id="header" style="text-align: center; color: navy">Welcome to Space Invaders</h3>
+    <div style="text-align: center" id="index">
+        <p id="index" style="text-align: center; color: navy">Index of Points:</p>
+        <ul class="browser-default" style="background-color: cadetblue !important; color: navy; list-style-position: inside;">
+            <li>When an asteroid crosses the border 15 points are lost</li>
+            <li>When an alien crosses the border 5 points are lost</li>
+            <li>When an alien bullet hits you 3 point is lost</li>
+            <li>When you kill an alien 5 points are gained. Remeber that to kill an alien you need to shoot it twice.</li>
+            <li>When you shoot a meteor 2 points are gained</li>
+        </ul>
+    </div>
+     
     <div style="margin: 0 auto; width: 64%" id="p5jscanvas"></div>
     <br>
     <script src="/static/game.js"></script>

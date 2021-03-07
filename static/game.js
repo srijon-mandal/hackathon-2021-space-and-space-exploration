@@ -28,7 +28,7 @@ function setup() {
         } else {
             enemies.push(["meteor", enemy_PosX, -10, 1])
         }
-    }, 1500);
+    }, 1000);
     
     interval2 = setInterval(function() {
         var enemies_alien = []
@@ -40,7 +40,7 @@ function setup() {
         if (enemies_alien.length !== 0) {
             bullets_enemy.push(enemies_alien[Math.floor(Math.random() * enemies_alien.length)])
         }
-    }, 1000);
+    }, 500);
 }
 
 function windowResized() {
@@ -94,7 +94,7 @@ function draw() {
                 }
                 if (posX<=bullet_pos[0] && bullet_pos[0]<=posX+70) {
                     if (posY<=bullet_pos[1] && bullet_pos[1]<=posY+70) {
-                        score-=1
+                        score-=3
                         delete bullets_enemy[bullets_enemy.indexOf(bullet_pos)]
                     }
                 }
@@ -107,10 +107,10 @@ function draw() {
             if (enemy_pos !== undefined) {
                 if (enemy_pos[0] == "meteor") {
                     image(asteroid, enemy_pos[1], enemy_pos[2], 40, 40)
-                    enemy_pos[2] += 2 
+                    enemy_pos[2] += 1.75 
                 } else {
                     image(alien_shooter, enemy_pos[1], enemy_pos[2], 40, 40)
-                    enemy_pos[2] += 2.5
+                    enemy_pos[2] += 2.75
                 }
                 if (enemy_pos[2] > 420) {
                     if (enemy_pos[0] == "meteor") score-=15
