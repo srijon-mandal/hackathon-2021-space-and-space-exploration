@@ -44,7 +44,13 @@ function setup() {
 }
 
 function windowResized() {
-    canvas.position((windowWidth/2)-(800/2), (windowHeight/2)-(450/2)+(document.getElementById("header").scrollHeight+document.getElementById("index").scrollHeight));
+    canvas.remove()
+//     canvas.position((windowWidth/2)-(800/2), (windowHeight/2)-(450/2)+(document.getElementById("header").scrollHeight+document.getElementById("index").scrollHeight));
+    canvas = createCanvas(windowWidth*0.635, 450)
+    canvas.parent('p5jscanvas');
+    // canvas.position((windowWidth/2)-(800/2), (windowHeight/2)-(450/2)+(document.getElementById("header").scrollHeight+document.getElementById("index").scrollHeight));
+    // canvas.center('horizontal')
+    textAlign(CENTER, CENTER);
 }
 
 function preload() {
