@@ -14,15 +14,12 @@ var enemies = [];
 var gameOver = false;
 
 function setup() {
-    bg = loadImage('static/space_background.jpg');
-    // canvas = createCanvas(800, 450);
+    bg = loadImage("static/space_background.jpg");
     canvas = createCanvas(windowWidth*0.635, 450)
-    canvas.parent('p5jscanvas');
-    // canvas.position((windowWidth/2)-(800/2), (windowHeight/2)-(450/2)+(document.getElementById("header").scrollHeight+document.getElementById("index").scrollHeight));
-    // canvas.center('horizontal')
+    canvas.parent("p5jscanvas");
     textAlign(CENTER, CENTER);
     interval = setInterval(function() {
-        var enemy_PosX = getRandomInt(30, 750)
+        var enemy_PosX = getRandomInt(5, windowWidth*0.635-50)
         if (getRandomInt(1, 10) <= 6) {
             enemies.push(["alien", enemy_PosX, -10, 2])
         } else {
@@ -45,26 +42,23 @@ function setup() {
 
 function windowResized() {
     canvas.remove()
-//     canvas.position((windowWidth/2)-(800/2), (windowHeight/2)-(450/2)+(document.getElementById("header").scrollHeight+document.getElementById("index").scrollHeight));
     canvas = createCanvas(windowWidth*0.635, 450)
-    canvas.parent('p5jscanvas');
-    // canvas.position((windowWidth/2)-(800/2), (windowHeight/2)-(450/2)+(document.getElementById("header").scrollHeight+document.getElementById("index").scrollHeight));
-    // canvas.center('horizontal')
+    canvas.parent("p5jscanvas");
     textAlign(CENTER, CENTER);
 }
 
 function preload() {
-    space_shooter = loadImage('static/space_shooter.png');
-    alien_shooter = loadImage('static/alien_shooter.png');
-    asteroid = loadImage('static/asteroid.png');
-    planet_image = loadImage('static/planet.png');
-    bullet = loadImage('static/bullet.png');
+    space_shooter = loadImage("static/space_shooter.png");
+    alien_shooter = loadImage("static/alien_shooter.png");
+    asteroid = loadImage("static/asteroid.png");
+    planet_image = loadImage("static/planet.png");
+    bullet = loadImage("static/bullet.png");
 }
 
 function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    var min = Math.ceil(min);
+    var max = Math.floor(max);
+    return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 }
 
 function draw() {
@@ -74,64 +68,54 @@ function draw() {
         if (keyIsDown(LEFT_ARROW)) {
             if (posX > 0) posX -= 5;
         } else if (keyIsDown(RIGHT_ARROW)) {
-            if (posX < 725) posX += 5;
+            if (posX < windowWidth*0.635-72) posX += 5;
         }
-        for (let bullet_pos of bullets) {
-            if (bullet_pos !== undefined) {
-                image(bullet, bullet_pos[0], bullet_pos[1], 15, 15)
-                bullet_pos[1] -= 10
-                if (bullet_pos[1] < 0) {
-                    delete bullets[bullets.indexOf(bullet_pos)]
-                }
-            } 
+        for (let [index, bullet_pos] of bullets.entries()) {
+            image(bullet, bullet_pos[0], bullet_pos[1], 15, 15)
+            bullet_pos[1] -= 10
+            if (bullet_pos[1] < 0) {
+                bullets.splice(index, 1)
+            }
         }
-        for (let bullet_pos of bullets_enemy) {
-            if (bullet_pos !== undefined) {
-                image(bullet, bullet_pos[0]+25, bullet_pos[1], 15, 15)
-                bullet_pos[1] += 10
-                if (bullet_pos[1] > 450) {
-                    delete bullets[bullets.indexOf(bullet_pos)]
+        for (let [index, bullet_pos] of bullets_enemy.entries()) {
+            image(bullet, bullet_pos[0]+25, bullet_pos[1], 15, 15)
+            bullet_pos[1] += 10
+            if (bullet_pos[1] > 450) bullets_enemy.splice(index, 1)
+            if (posX<=bullet_pos[0] && bullet_pos[0]<=posX+70) {
+                if (posY<=bullet_pos[1] && bullet_pos[1]<=posY+70) {
+                    score-=3
+                    bullets_enemy.splice(index, 1)
                 }
-                if (posX<=bullet_pos[0] && bullet_pos[0]<=posX+70) {
-                    if (posY<=bullet_pos[1] && bullet_pos[1]<=posY+70) {
-                        score-=3
-                        delete bullets_enemy[bullets_enemy.indexOf(bullet_pos)]
-                    }
-                }
-            } 
+            }
         }
         fill(0, 255, 0)
         textSize(18);
         text(score.toString(), 400, 410);
-        for (let enemy_pos of enemies) {
-            if (enemy_pos !== undefined) {
-                if (enemy_pos[0] == "meteor") {
-                    image(asteroid, enemy_pos[1], enemy_pos[2], 40, 40)
-                    enemy_pos[2] += 1.75 
-                } else {
-                    image(alien_shooter, enemy_pos[1], enemy_pos[2], 40, 40)
-                    enemy_pos[2] += 2.75
-                }
-                if (enemy_pos[2] > 420) {
-                    if (enemy_pos[0] == "meteor") score-=15
-                    else score-=5
-                    delete enemies[enemies.indexOf(enemy_pos)]
-                }
-                if (score<=0) gameOver = true
-                else if (score>=50) gameOver = true
+        for (let [index, enemy_pos] of enemies.entries()) {
+            if (enemy_pos[0] == "meteor") {
+                image(asteroid, enemy_pos[1], enemy_pos[2], 40, 40)
+                enemy_pos[2] += 1.75 
+            } else {
+                image(alien_shooter, enemy_pos[1], enemy_pos[2], 40, 40)
+                enemy_pos[2] += 2.6
+            }
+            if (enemy_pos[2] > 420) {
+                if (enemy_pos[0] == "meteor") score-=15
+                else score-=5
+                enemies.splice(index, 1)
+            }
+            if (score<=0) gameOver = true
+            else if (score>=50) gameOver = true
 
-                for (let bullet_pos of bullets) {
-                    if (bullet_pos !== undefined) {
-                        if (enemy_pos[1]<=bullet_pos[0] && bullet_pos[0]<=enemy_pos[1]+40) {
-                            if (enemy_pos[2]<=bullet_pos[1] && bullet_pos[1]<=enemy_pos[2]+40) {
-                                delete bullets[bullets.indexOf(bullet_pos)]
-                                enemy_pos[3]--
-                                if (enemy_pos[3]<1) {
-                                    if (enemy_pos[0] == "meteor") score+=2
-                                    else score+=5
-                                    delete enemies[enemies.indexOf(enemy_pos)]
-                                }
-                            }
+            for (let [bullet_index, bullet_pos] of bullets.entries()) {
+                if (enemy_pos[1]<=bullet_pos[0] && bullet_pos[0]<=enemy_pos[1]+40) {
+                    if (enemy_pos[2]<=bullet_pos[1] && bullet_pos[1]<=enemy_pos[2]+40) {
+                        bullets.splice(bullet_index, 1)
+                        enemy_pos[3]--
+                        if (enemy_pos[3]<1) {
+                            if (enemy_pos[0] == "meteor") score+=2
+                            else score+=5
+                            enemies.splice(index, 1)
                         }
                     }
                 }
@@ -149,6 +133,7 @@ function draw() {
         } else if (score>=50) {
             background(0);
             textSize(40);
+            fill(0, 255, 0)
             text("You Won - Your score reached 50 points.", 400, 220);
             clearInterval(interval);
             clearInterval(interval2);

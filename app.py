@@ -1,4 +1,5 @@
 from flask import *
+import os
 
 app = Flask(__name__)
 
@@ -8,4 +9,4 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=("DYNO" not in os.environ), threaded=True)
